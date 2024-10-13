@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  name     String
+  email    String  @unique
+  password String
+  github   String? @unique
+
+  pseudo        String   @unique
+  profilPicture String
+  bio           String?
+  website       String?
+  creationDate  DateTime @default(now())
+  location      String?
+
+  Certification Certification?
+  Post          Post[]
+  Response      Response[]
+  Preferences   Preferences?
+}
+
+model Certification {
+  id            Int     @id @default(autoincrement())
+  isCertified   Boolean
+  dateCertified String
+  certifiedWhy  String
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model Preferences {
+  id         Int     @id @default(autoincrement())
+  isDarkmode Boolean
+  language   String
+  isDyslexic Boolean
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model Post {
+  id      Int      @id @default(autoincrement())
+  content String
+  date    DateTime
+
+  userId   Int
+  user     User       @relation(fields: [userId], references: [id])
+  Response Response[]
+  Image    Image[]
+}
+
+model Response {
+  id      Int      @id @default(autoincrement())
+  content String
+  date    DateTime
+
+  postId Int
+  post   Post @relation(fields: [postId], references: [id])
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model Image {
+  id      Int     @id @default(autoincrement())
+  url     String
+  caption String?
+
+  postId Int
+  post   Post @relation(fields: [postId], references: [id])
+}
