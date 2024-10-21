@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async createUser(data: {
     name: string;
@@ -31,6 +31,12 @@ export class UserService {
         github: data.github,
         creationDate: new Date(),
       },
+    });
+  }
+
+  async findUserByName(name: string) {
+    return this.prisma.user.findUnique({
+      where: { name },
     });
   }
 
