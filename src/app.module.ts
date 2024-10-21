@@ -9,10 +9,12 @@ import { AuthService } from './auth/auth.service';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { PublicationController } from './publication/publication.controller';
+import { PublicationService } from './publication/publication.service';
 
 @Module({
   imports: [AuthModule, PrismaModule],
-  controllers: [AppController, UserController, AuthController],
-  providers: [AppService, PrismaService, UserService, AuthService],
+  controllers: [AppController, UserController, AuthController, PublicationController],
+  providers: [AppService, PrismaService, UserService, AuthService, PublicationService],
 })
 export class AppModule {}
