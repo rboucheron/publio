@@ -43,9 +43,15 @@ export class UserService {
   async getUserById(id: number) {
     return this.prisma.user.findUnique({
       where: { id },
-      include: {
+      select: {
+        id: true,
+        name: true,
         Certification: true,
-        Preferences: true,
+        pseudo: true,
+        profilPicture: true,
+        bio: true,
+        website: true,
+        location: true,
         Post: true,
         Response: true,
       },

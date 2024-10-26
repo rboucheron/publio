@@ -27,6 +27,39 @@ export class AuthService {
     return null;
   }
 
+  async createUser(data: {
+    name: string;
+    email: string;
+    password: string;
+    pseudo: string;
+    profilPicture: string;
+    bio?: string;
+    website?: string;
+    location?: string;
+    github?: string;
+  }) {
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
+    const result = await this.prisma.user.create({
+      data: {
+        name: data.name,
+        email: data.email,
+        password: hashedPassword,
+        pseudo: data.pseudo,
+        profilPicture: data.profilPicture,
+        bio: data.bio,
+        website: data.website,
+        location: data.location,
+        github: data.github,
+        creationDate: new Date(),
+      },
+    });
+
+    const { password, ...user } = result;
+
+    return this.login(user);
+  }
+
   async login(user: Omit<User, 'password'>) {
     const payload = { username: user.pseudo, sub: user.id };
     return this.jwtService.signAsync(payload);
